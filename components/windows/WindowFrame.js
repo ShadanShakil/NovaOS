@@ -53,8 +53,18 @@ export default function WindowFrame({ id, title, children }) {
       const newX = startPos.x + dx;
       const newY = startPos.y + dy;
 
-      // Allow dragging off-screen slightly but keep it reachable
-      updateWindowPosition(id, { x: newX, y: newY });
+      // Clamp newX so at least 100px of the window's width remains visible
+      const windowWidth = Math.min(650, window.innerWidth * 0.9);
+      const minX = 100 - windowWidth;
+      const maxX = window.innerWidth - 100;
+      const clampedX = Math.max(minX, Math.min(maxX, newX));
+
+      // Clamp newY so the title bar stays on-screen and doesn't go below the taskbar
+      const minY = 0;
+      const maxY = window.innerHeight - 48 - 10; // 48px taskbar + 10px margin
+      const clampedY = Math.max(minY, Math.min(maxY, newY));
+
+      updateWindowPosition(id, { x: clampedX, y: clampedY });
     };
 
     const handleMouseUp = () => {
@@ -66,6 +76,22 @@ export default function WindowFrame({ id, title, children }) {
     document.addEventListener('mouseup', handleMouseUp);
   };
 
+  // Safety net clamping at render time
+  const windowWidth = typeof window !== 'undefined' ? Math.min(650, window.innerWidth * 0.9) : 650;
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
+  const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+
+  const rawX = windowState.position?.x ?? 80;
+  const rawY = windowState.position?.y ?? 80;
+
+  const minX = 100 - windowWidth;
+  const maxX = screenWidth - 100;
+  const clampedX = Math.max(minX, Math.min(maxX, rawX));
+
+  const minY = 0;
+  const maxY = screenHeight - 48 - 10;
+  const clampedY = Math.max(minY, Math.min(maxY, rawY));
+
   // Determine dynamic sizing style
   const frameStyle = windowState.isMaximized
     ? {
@@ -76,8 +102,8 @@ export default function WindowFrame({ id, title, children }) {
         zIndex: windowState.zIndex ?? 10,
       }
     : {
-        top: `${windowState.position?.y ?? 80}px`,
-        left: `${windowState.position?.x ?? 80}px`,
+        top: `${clampedY}px`,
+        left: `${clampedX}px`,
         width: 'min(650px, 90vw)',
         height: 'min(450px, 80vh)',
         zIndex: windowState.zIndex ?? 10,
