@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </radialGradient>
+    <linearGradient id="neonGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" /> <!-- Cyan -->
+      <stop offset="50%" stop-color="#3b82f6" /> <!-- Blue -->
+      <stop offset="100%" stop-color="#10b981" /> <!-- Emerald -->
+    </linearGradient>
+    <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="200" height="200" rx="44" fill="url(#bgGlow)" />
+  <rect width="198" height="198" x="1" y="1" rx="43" fill="none" stroke="#1e293b" stroke-width="2" />
+
+  <!-- Supernova Outer Ring -->
+  <circle cx="100" cy="100" r="65" fill="none" stroke="url(#neonGlow)" stroke-width="4.5" filter="url(#glowFilter)" opacity="0.85" />
+  
+  <!-- Outer dotted orbit ring -->
+  <circle cx="100" cy="100" r="75" fill="none" stroke="#334155" stroke-width="1.5" stroke-dasharray="6 8" />
+
+  <!-- Stylized Letter N -->
+  <g filter="url(#glowFilter)">
+    <!-- Left vertical bar of N -->
+    <path d="M 75 62 L 75 138" stroke="#06b6d4" stroke-width="10.5" stroke-linecap="round" />
+    <!-- Right vertical bar of N -->
+    <path d="M 125 62 L 125 138" stroke="#10b981" stroke-width="10.5" stroke-linecap="round" />
+    <!-- Diagonal of N -->
+    <path d="M 75 62 L 125 138" stroke="url(#neonGlow)" stroke-width="10.5" stroke-linecap="round" />
+  </g>
+
+  <!-- Core Particle -->
+  <circle cx="100" cy="100" r="11" fill="#ffffff" filter="url(#glowFilter)" opacity="0.9" />
+  <circle cx="100" cy="100" r="5" fill="#67e8f9" />
+</svg>
